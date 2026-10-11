@@ -20,8 +20,6 @@ public class Scoundrel {
     }
 
     /**
-     *
-     *
      * @param a Deck 1
      * @param b Deck 2
      * @return Merged Deck of a and b
@@ -64,15 +62,14 @@ public class Scoundrel {
      */
     @Override
     public String toString() {
-//TODO: Output game state so that player can make a good decision. Has to incluide: health, weapon, weaponBound, deck.getNumberOfRemainingCards(),remainingRooms.length ;
-        System.out.println("--------");
-        System.out.println("Health: "+this.health);
-        System.out.println("Weapon type: "+this.weapon);
-        System.out.println("Weapon damage: "+this.weaponBound);
-        System.out.println("Remaining rooms:"+this.remainingRooms.length);
-        System.out.println("Remaining cards: "+this.deck.getNumberOfRemainingCards());
-        System.out.println("--------");
-        return null;
+        return
+        "--------\n"+
+        "Health: " +health+"\n"+
+        "Weapon damage: "+this.weapon+"\n"+
+        "Weapon binding: "+this.weaponBound+"\n"+
+        "Remaining rooms: "+this.remainingRooms.length+"\n"+
+        "Remaining cards: "+this.deck.getNumberOfRemainingCards()+"\n"+
+        "--------\n";
     }
 
     /**
@@ -91,14 +88,19 @@ public class Scoundrel {
         }
         return i;
     }
+
+    /**
+     * Gets user input to select a room
+     */
     public void chooseRoom() {
         int numberOfDecisions = printDecisions();// gives the number of possible decisions
 // Player chooses a room
+        Scanner scanner = new Scanner(System.in);
         int decision = 0;
         boolean noInput = true;
         while (noInput) {
             try {
-//TODO: Use Scanner to get user decision
+                decision = Integer.parseInt(scanner.nextLine());
                 if (decision < numberOfDecisions && numberOfDecisions >= 0) {
                     noInput = false;
                 } else {
@@ -119,11 +121,21 @@ public class Scoundrel {
             avoidRooms();
         }
     }
+
+    /**
+     * remove the given card from the Array currentRooms
+     * @param card Card to remove from deck
+     */
     private void removeRoom(CardDeckArray.Card card) {
-        CardDeckArray.Card[] result = new CardDeckArray.Card[currentRooms.length -1];
-// TODO remove the given card from the Array currentRooms
-        currentRooms = result;
+        //CardDeckArray.Card[] result = new CardDeckArray.Card[currentRooms.length -1];
+        this.deck.removeCard(card);
+
     }
+
+    /**
+     * Plays a card in the current room
+     * @param card Card to play in current room
+     */
     private void playRoom(CardDeckArray.Card card) {
 // "Spades","Clubs","Diamonds","Hearts"
         switch (card.getSuit()) {
@@ -138,8 +150,7 @@ public class Scoundrel {
                     health-= damage;
                     weaponBound = monsterStrength;
                 } else {
-// Weapon cannot be used
-//TODO
+                    System.out.println("Weapon is to broken to fight this monster");
                 }
             }
             case "Diamonds"-> {
@@ -147,13 +158,21 @@ public class Scoundrel {
                 weaponBound = 14; // the first time a weapon is used, it is unbound. So we set this value to the maximum monster strength.
             }
             case "Hearts"-> {
-//TODO
+                health += card.getValue();
+                if (health > 20) {
+                    health = 20;
+                }
             }
             default-> {
                 throw new IllegalArgumentException("Unexpected value: ");
             }
         }
     }
+
+    /**
+     * Starts the game
+     * Ends the game when health or cards reach 0
+     */
     public static void playScoundrel() {
         Scoundrel game = new Scoundrel();
         while (game.health > 0 && (game.deck.getNumberOfRemainingCards() +
@@ -177,6 +196,12 @@ public class Scoundrel {
         }
     }
     public static void main(String[] args) {
-        //Scoundrel.playScoundrel();
+        Scoundrel.playScoundrel();
+       Scoundrel spiel1 = new Scoundrel();
+        System.out.println(spiel1);
+        System.out.println(spiel1.printDecisions());
+        Scoundrel spiel2 = new Scoundrel();
+        //CardDeckArray.Card[] hi = Scoundrel.mergeCards(spiel1.deck,spiel2);
+
     }
 }
